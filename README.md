@@ -1,6 +1,6 @@
-bookmarkvar
-===========
+[bookmarkvar](https://satgo1546.github.io/bookmarkvar/)
+=============
 
 > *bookmarklets like a decade ago*
 
-Because ECMAScript 5 has got no `const`.
+Because ECMAScript 5 had got no `const`.
