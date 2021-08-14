@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>bookmarkvar</title>
 		<meta name="description" content="@satgo1546制作的小书签 / Bookmarklets made by @satgo1546">
+		<meta name="author" content="satgo1546">
 		<link rel="canonical" href="https://satgo1546.github.io/bookmarkvar/">
 		<style>
 			* {
@@ -31,7 +32,7 @@
 				font-size: 2em;
 			}
 
-			a, u {
+			body > a, body > u {
 				font-size: 2em;
 				display: block;
 				text-align: center;
@@ -49,6 +50,10 @@
 				font-family: monospace, monospace;
 				font-size: 1em;
 			}
+
+			body:not(.via) .via-only {
+				display: none;
+			}
 		</style>
   </head>
   <body>
@@ -57,6 +62,7 @@
 			<ruby>大书签<rp> | </rp><rt>bookmarkvar</rt></ruby>
 		</h1>
 		<p>因为ECMAScript 5尚未标准化<code>"".small</code>。</p>
+		<p class="via-only">使用Via上网时，点按“◆”以作为Via脚本安装，再次点按以卸载。安装后将对所有新开启的页面生效。</p>
 
 		<h2>删除<code>&lt;a&gt;</code>标签</h2>
 		<p>包括链接和锚记，链接将被代以下划线<code>&lt;u&gt;</code>标签。</p>
@@ -64,20 +70,74 @@
 
 		<h2>快进</h2>
 		<p>视频播放速度超级加倍。</p>
-    <textarea>javascript:Array.prototype.forEach.call(document.getElementsByTagName("video"), function (x) { x.playbackRate = 11.4514 })</textarea>
+		<textarea>javascript:Array.prototype.forEach.call(document.getElementsByTagName("video"), function (x) { x.playbackRate = 11.4514 })</textarea>
+
+		<h2>上网时在读什么？有没有大字模式？可以有自动换行吗？</h2>
+		<p><a href="https://www.w3.org/WAI/standards-guidelines/act/rules/meta-viewport-b4f0c3/">在WAI里规定<code>maximum-scale</code>属性值不得小于2</a>，这有什么用啊？</p>
+		<textarea>javascript:with(document.querySelector("meta[name=viewport]")||document.getElementsByTagName("head")[0].appendChild(document.createElement("meta")))void(name="viewport",content="width=device-width,height=device-height,initial-scale=1.0")</textarea>
 
 		<script>
+			// java.lang.String.hashCode
+			function hashCode(str) {
+				var x = 0;
+				for (var i = 0; i < str.length; i++) {
+					x *= 31;
+					x += str.charCodeAt(i);
+					x |= 0; // convert to 32-bit integer
+				}
+				return x;
+			}
+			function viaBase64Encode(str) {
+				// btoa() assumes Latin-1 and TextEncoder defaults to UTF-8.
+				return btoa(String.fromCharCode.apply(0, new TextEncoder().encode(str)));
+			}
+			function viaInstall() {
+				try {
+					var code = this.name + " @ " + location.href;
+					code = "/* " + code.replace(/\*\//g, "* /") + " */ ";
+					code += this.nextSibling.value.replace(/^javascript:/m, "")
+					via.addon(viaBase64Encode(JSON.stringify({
+						id: parseInt(this.id),
+						name: this.name,
+						author: document.querySelector("meta[name=author]").content,
+						url: "*",
+						code: viaBase64Encode(code),
+					})));
+					toggleDiamond(this.id);
+				} catch (t) {
+					alert("为Via安装或卸载脚本时发生了下列错误。\n" + t);
+				}
+			}
+			function toggleDiamond(id) {
+				id = document.getElementById(id);
+				if (!id) return;
+				id.textContent = String.fromCodePoint(0x25c6 + (id.textContent === "\u25c6"));
+			}
 			Array.prototype.forEach.call(document.getElementsByTagName("textarea"), function (el) {
 				el.cols = 80;
 				el.rows = el.value.split("\n").reduce(function (s, t) {
 					return s + Math.ceil(t.length / 80);
 				}, 0) + 1;
 				el.readOnly = true;
+				var h2 = el;
+				do {
+					h2 = h2.previousSibling;
+				} while (h2.tagName !== "H2");
 				var a = document.createElement("a");
 				a.href = el.value.replace(/^\s+/mg, "").replace(/^\/\/.+?$/mg, "").replace(/\n/g, "");
 				a.textContent = "\u25c6";
+				a.id = hashCode(h2.textContent) + 4e4;
+				a.name = h2.textContent;
 				el.parentNode.insertBefore(a, el);
 			});
+			if (window.via) {
+				document.body.classList.add("via");
+				JSON.parse(via.getInstalledAddonID()).forEach(toggleDiamond);
+				Array.prototype.forEach.call(document.querySelectorAll("body > a"), function (a) {
+					a.href = "javascript:undefined";
+					a.onclick = viaInstall;
+				});
+			}
 		</script>
   </body>
 </html>
