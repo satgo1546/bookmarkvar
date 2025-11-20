@@ -76,6 +76,10 @@
 		<p><a href="https://www.w3.org/WAI/standards-guidelines/act/rules/meta-viewport-b4f0c3/">在WAI里规定<code>maximum-scale</code>属性值不得小于2</a>，这有什么用啊？</p>
 		<textarea>javascript:with(document.querySelector("meta[name=viewport]")||document.getElementsByTagName("head")[0].appendChild(document.createElement("meta")))void(name="viewport",content="width=device-width,height=device-height,initial-scale=1.0")</textarea>
 
+		<h2>打印机友好</h2>
+		<p>以启发式方法寻找最主要元素，隐藏其他内容与边距，减少正文行距与段间距。</p>
+		<textarea>javascript:{let A=document.querySelector('main');if(!A){let m=new Map,a=[];for(let{parentNode:p}of document.querySelectorAll('p:not(:is(header,footer,nav) *)'))m.set(p,-~m.get(p));for(let[p,n]of m)a[n]=p;A=a.pop()};for(let p=A;p.parentNode;p=p.parentNode)for(let s of p.parentNode.children)s.style=(s==p?'margin:0;padding:0;border:0;width:auto;max-width:none;min-width:0;':'display:none;').replace(/;/g,'!important;');let c=new CSSStyleSheet();document.body.contentEditable=!!document.adoptedStyleSheets.push(c);c.replaceSync('*{line-height:1.2;}p{margin:.5em 0;padding:0;}h1,h2,h3,h4{margin:0;padding:0;}a:link{text-decoration:underline;}a:link:after{content:" ("attr(href)")";font:75% serif;}'.replace(/;/g,'!important;'))}</textarea>
+
 		<script>
 			// java.lang.String.hashCode
 			function hashCode(str) {
