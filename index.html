@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>bookmarkvar</title>
@@ -16,6 +16,7 @@
 			html {
 				margin: 0;
 				background: silver url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="8" height="4"%3E%3Cpath d="M 0 0 H 8 V 4 H 0 Z" fill="%23c0c0c0" /%3E%3Cpath d="M 0 0 h 1 v 1 h -1 Z M 4 2 h 1 v 1 h -1 Z" fill="%23ffffff" /%3E%3C/svg%3E');
+				text-autospace: normal;
 			}
 
 			body {
@@ -24,6 +25,13 @@
 				max-width: 800px;
 				padding: 16px;
 				background-color: #ccc;
+			}
+
+			h1 {
+				margin: 1.5em 0 0;
+				font-size: 3em;
+				color: white;
+				text-shadow: -1px 0 black, 0 -1px black, -1px -1px black;
 			}
 
 			h2 {
@@ -58,9 +66,7 @@
   </head>
   <body>
 		<span style="float: right; transform: skewX(-9grad);">小程序，一如十年前</span>
-		<h1 style="margin: 0; font-size: 3em; color: white; text-shadow: -1px 0 black, 0 -1px black, -1px -1px black;">
-			<ruby>大书签<rp> | </rp><rt>bookmarkvar</rt></ruby>
-		</h1>
+		<h1 style="margin-top: 0;"><ruby>大书签<rp> | </rp><rt>bookmarkvar</rt></ruby></h1>
 		<p>因为ECMAScript 5尚未标准化<code>"".small</code>。</p>
 		<p class="via-only">使用Via上网时，点按“◆”以作为Via脚本安装，再次点按以卸载。安装后将对所有新开启的页面生效。</p>
 
@@ -77,8 +83,14 @@
 		<textarea>javascript:with(document.querySelector("meta[name=viewport]")||document.getElementsByTagName("head")[0].appendChild(document.createElement("meta")))void(name="viewport",content="width=device-width,height=device-height,initial-scale=1.0")</textarea>
 
 		<h2>打印机友好</h2>
-		<p>以启发式方法寻找最主要元素，隐藏其他内容与边距，减少正文行距与段间距。</p>
+		<p>启发式寻找最主要元素，隐藏其他内容与边距，减少正文行距与段间距。</p>
 		<textarea>javascript:{let A=document.querySelector('main');if(!A){let m=new Map,a=[];for(let{parentNode:p}of document.querySelectorAll('p:not(:is(header,footer,nav) *)'))m.set(p,-~m.get(p));for(let[p,n]of m)a[n]=p;A=a.pop()};for(let p=A;p.parentNode;p=p.parentNode)for(let s of p.parentNode.children)s.style=(s==p?'margin:0;padding:0;border:0;width:auto;max-width:none;min-width:0;':'display:none;').replace(/;/g,'!important;');let c=new CSSStyleSheet();document.body.contentEditable=!!document.adoptedStyleSheets.push(c);c.replaceSync('*{line-height:1.2;}p{margin:.5em 0;padding:0;}h1,h2,h3,h4{margin:0;padding:0;}a:link{text-decoration:underline;}a:link:after{content:" ("attr(href)")";font:75% serif;}'.replace(/;/g,'!important;'))}</textarea>
+
+		<h1>用户脚本</h1>
+		<p>我使用的用户脚本管理器是<a href="https://violentmonkey.github.io/">Violentmonkey</a>。</p>
+
+		<h2><a href="firefox-caret-fix.user.js">修复Firefox键盘跨行移动光标受阻的bug</a></h2>
+		<p>光标在行末时，按<kbd>→</kbd>会转到次行首，逻辑上原地不动。参照<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1761941" title="Unusual cursor position/traveling at line end of multi line paragraph (content editable)">工单</a>。</p>
 
 		<script>
 			// java.lang.String.hashCode
