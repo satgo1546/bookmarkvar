@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        修复Firefox键盘跨行移动光标受阻的bug
 // @description https://bugzilla.mozilla.org/show_bug.cgi?id=1761941
-// @version     1.0.0
+// @version     1.0.1
 // @author      satgo1546
 // @homepageURL https://satgo1546.github.io/bookmarkvar/
 // @namespace   https://satgo1546.github.io/
@@ -26,7 +26,13 @@ addEventListener('keydown', e => {
 				if (el.selectionStart === selectionStart && el.selectionEnd === selectionEnd && el.selectionDirection === selectionDirection && newHead >= 0 && newHead <= el.value.length) {
 					if (!e.shiftKey) {
 						el.selectionStart = el.selectionEnd = newHead
-					} else if (selectionDirection === 'backward' || selectionStart === selectionEnd) {
+					} else if (selectionStart === selectionEnd) {
+						if (newHead < el.selectionStart) {
+							el.selectionStart = newHead
+						} else {
+							el.selectionEnd = newHead
+						}
+					} else if (selectionDirection === 'backward') {
 						el.selectionStart = newHead
 					} else {
 						el.selectionEnd = newHead
